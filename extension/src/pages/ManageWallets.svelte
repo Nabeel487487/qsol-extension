@@ -86,14 +86,9 @@
 	}
 
 	function short(id) {
-		if (typeof id !== "string" || id.length < 60) {
-			// Handle the case where id is not a string or is too short
-			return "Invalid ID";
-		}
 		return `${id.slice(0, 6)} . . . ${id.slice(56, 60)}`;
 	}
 
-	
 	function delete_wallet(idx) {
 		console.log("test", idx);
 		entities.splice(idx, 1);
@@ -104,68 +99,60 @@
 	}
 </script>
 
-<div id="dashboard">
-	<div id="overview">
-		<div class="user-balance">
-			<h3>Total Balance</h3>
-			<h2>
-				{`${fmt_number(totalBalance).toLocaleString(undefined, { maximumFractionDigits: 3 })} ${getIdent(totalBalance, settings.num_fmt)} QUs`}
-			</h2>
-		</div>
-		<div class="separator"></div>
-	</div>
-
+<div id="manageWallets">
+	<div class="separator no-pad"></div>
 	<div id="wallets">
-		<h1>Your Wallets</h1>
 		{#if wallets.length > 0}
 			{#each wallets as wallet, idx}
-				<div class="wallet">
-					<div class="wallet-info">
-						<div class="wallet-name">{wallet.name}</div>
-						<div class="wallet-balance">
-							{fmt_number(wallet.balance).toLocaleString(undefined, {
+		<div class="wallet">
+			<div class="wallet-info">
+				<div class="wallet-name">
+					<img src="../assets/icons/ext-link.svg" alt="" />
+					{wallet.name}
+				</div>
+				<div
+					class="action-icon del-icon"
+					on:keypress={() => {}}
+					on:click={() => delete_wallet(idx)}
+				>
+					<FaTrash />
+				</div>
+			</div>
+			<div class="wallet-actions">
+				<div class="wallet-balance">
+					{fmt_number(wallet.balance).toLocaleString(undefined, {
 								maximumFractionDigits: 3,
 							})}
-							QUs
-						</div>
+					QUs
+				</div>
+				<div class="wallet-more-info">
+					<div
+						on:keypress={() => {}}
+						on:click={() => {
+							browser.tabs.create({
+								url: `https://app.qubic.li/network/explorer/address/${wallet.id}`,
+							});
+						}}
+						class="wallet-id"
+					>
+						{short(wallet.id)}
+						<!-- ksjhfs . . . weqa -->
 					</div>
-					<div class="wallet-actions">
+					<div class="actions">
 						<div
+							class="action-icon"
 							on:keypress={() => {}}
 							on:click={() => {
-								browser.tabs.create({
-									url: `https://app.qubic.li/network/explorer/address/${wallet.id}`,
-								});
+								navigator.clipboard.writeText(wallet.id);
 							}}
-							class="wallet-id"
 						>
-							{short(wallet.id)}
-							<img src="../assets/icons/ext-link.svg" alt="" />
-						</div>
-						<div class="actions">
-							<div
-								class="action-icon"
-								on:keypress={() => {}}
-								on:click={() => {
-									navigator.clipboard.writeText(wallet.id);
-								}}
-							>
-								<FaRegCopy />
-							</div>
-							<div
-								class="action-icon"
-								on:keypress={() => {}}
-								on:click={() => {
-									address_index = idx;
-									page = 4;
-								}}
-							>
-								<FaLocationArrow />
-							</div>
+							<FaRegCopy />
 						</div>
 					</div>
 				</div>
-			{/each}
+			</div>
+		</div>
+		{/each}
 		{:else}
 			<div class="nowallet">
 				<h4>No wallets found...</h4>
@@ -188,59 +175,19 @@
 </div>
 
 <style>
-	#dashboard {
+	#manageWallets {
 		height: max-content;
 		min-height: 434px;
 		background-color: #1a1d26;
-		padding-bottom: 4rem;
-	}
-
-	#overview {
-		display: flex;
-		flex-direction: column;
 		padding: 0 1rem;
-	}
-
-	#overview .user-balance {
-		display: flex;
-		background-color: #101011;
-		border-radius: 17px;
-		flex-direction: column;
-		gap: 0.25rem;
-		padding: 1rem 1rem;
-		border: #fff1 1px solid;
-		margin-bottom: 0.5rem;
-		box-shadow: rgba(173, 181, 189, 0.062) 0px 4px 12px;
-	}
-	#overview .user-balance h3 {
-		color: #818197;
-		margin: 0;
-		font-size: 1rem;
-		font-weight: 500;
-	}
-
-	#overview .user-balance h2 {
-		color: #859dda;
-		font-size: 1.5rem;
-		margin: 0;
-		font-weight: 600;
+		padding-bottom: 4rem;
 	}
 
 	#wallets {
 		display: flex;
 		flex-direction: column;
-		padding: 0 1rem;
 		padding-bottom: 1.25rem;
-	}
-
-	#wallets h1 {
-		font-size: 1rem;
-		line-height: 1.75rem;
-		font-weight: 500;
-		margin-left: 0.25rem;
-		opacity: 54%;
-		margin-top: 0.25rem;
-		margin-bottom: 0.5rem;
+		padding-top: 1rem;
 	}
 
 	/* WALLLET */
@@ -257,18 +204,31 @@
 		padding: 0.25rem 1rem;
 	}
 
-	.wallet .wallet-info,
-	.wallet .wallet-actions {
+	.wallet .wallet-info {
+		border-bottom: 1px solid #ffffff28;
+		flex-direction: row !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+
 		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
 		width: 100%;
 		padding: 0.5rem 0;
 		align-items: center;
 	}
 
-	.wallet-info {
-		border-bottom: 1px solid #ffffff28;
+	.wallet .wallet-actions {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		padding: 0.5rem 0;
+	}
+
+	.wallet .wallet-actions .wallet-more-info {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		width: 100%;
+		align-items: center;
 	}
 
 	.wallet .wallet-name {
@@ -279,6 +239,19 @@
 		font-style: normal;
 		font-weight: 500;
 		line-height: 1.5rem;
+
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		gap: 0.5rem;
+	}
+	.wallet .wallet-name:hover {
+		color: #6f88ce;
+	}
+
+	.wallet .wallet-name img {
+		width: 1rem;
+		height: 1rem;
 	}
 
 	.wallet .wallet-balance {
@@ -308,17 +281,7 @@
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
-		cursor: pointer;
 		transition-duration: 0.2s;
-	}
-
-	.wallet .wallet-id:hover {
-		color: #9baee4;
-	}
-
-	.wallet .wallet-id img {
-		width: 1rem;
-		height: 1rem;
 	}
 
 	.wallet .wallet-actions .actions {
@@ -327,7 +290,7 @@
 		gap: 0.5rem;
 	}
 
-	.wallet .wallet-actions .actions .action-icon {
+	.wallet .action-icon {
 		cursor: pointer;
 		height: 1.75rem;
 		padding: 0.4rem;
@@ -335,7 +298,7 @@
 		background-color: #44454d;
 	}
 
-	.wallet .wallet-actions .actions .action-icon:hover {
+	.wallet .action-icon:hover {
 		background-color: #55565f;
 	}
 
@@ -387,12 +350,16 @@
 		margin-top: 1rem;
 	}
 
-	/* .activity-indicator {
+	.activity-indicator {
 		width: 1rem;
 		height: 1rem;
 		border: gray solid 1px;
 		border-radius: 50%;
-	} */
+	}
+
+	.del-icon {
+		color: #CE6262;
+	}
 
 	/*#overview h3 {
         color: #27a8db;
