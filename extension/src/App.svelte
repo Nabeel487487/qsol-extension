@@ -140,7 +140,7 @@
 	});
 </script>
 
-<main style={[1, 2, 3, 4, 8].includes(page) && "height:490px !important;"}>
+<main>
 	{#if [1, 2, 3, 4, 7, 8].includes(page)}
 		<Header bind:page />
 		{#if page !== 7}
@@ -204,13 +204,8 @@
 	{:else}
 		<p>Page not found</p>
 	{/if}
+	<Footer settings={settings} bind:current_tick />
 </main>
-{#if [1, 2, 3, 4, 8].includes(page)}
-	<footer></footer>
-{/if}
-{#if page === 0}
-	<Footer {settings} bind:current_tick />
-{/if}
 
 <style>
 	/* window props */
@@ -220,11 +215,7 @@
 		width: 360px;
 		color: white;
 		background-color: #17181a;
-		/* padding: 5px, 5px, 60px, 5px; */
 		overflow-y: auto;
 		height: 546px;
-	}
-	footer {
-		height: 56px;
 	}
 </style>

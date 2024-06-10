@@ -181,6 +181,7 @@
 		background-color: #1a1d26;
 		padding: 0 1rem;
 		padding-bottom: 4rem;
+		overflow: scroll;
 	}
 
 	#wallets {

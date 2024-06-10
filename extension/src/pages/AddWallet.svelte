@@ -71,7 +71,7 @@
 	}
 
 	function short(id) {
-		return `${id.slice(0, 4)}...${id.slice(56, 60)}`;
+		return `${id.slice(0, 8)} . . . ${id.slice(52, 60)}`;
 	}
 </script>
 
@@ -93,8 +93,8 @@
 			placeholder="Wallet Seed"
 			bind:value={seed}
 		/>
-		<input class="id-output" autocomplete="off" placeholder="Public ID" />
-		<h5>{valid ? short(placeholder) : placeholder}</h5>
+		<!-- <input class="id-output" autocomplete="off" placeholder="Public ID" /> -->
+		<h5>{valid ?  "Public ID: " + short(placeholder) : placeholder}</h5>
 
 		<div style="display: flex;justify-content: start; gap: 6px;">
 			<button class="randomizer" on:click={randomize}>
@@ -111,13 +111,6 @@
 				Copy Seed
 			</button>
 		</div>
-		<!-- 
-        <input
-        disabled
-		id="id-output"
-		style="text-align: center;"
-		placeholder={valid ? short(placeholder) : ""}
-        /> -->
 
 		<button
 			type="submit"
@@ -154,9 +147,9 @@
 	.container h5 {
 		font-size: 14px;
 		color: #fff;
-		opacity: 0.6;
+		opacity: 0.8;
 		line-height: 24px;
-		margin-bottom: 0.75rem;
+		margin-bottom: 1.25rem;
         font-weight: 400;
 	}
 	.container p {

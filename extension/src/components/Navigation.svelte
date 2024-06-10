@@ -59,7 +59,7 @@
 		justify-content: space-around;
 		/* padding: 0 1rem; */
 		position: fixed;
-		bottom: 0;
+		bottom: 24px;
 		left: 0;
 		z-index: 10;
 	}

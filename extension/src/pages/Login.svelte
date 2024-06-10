@@ -13,7 +13,7 @@
 	let confirmPass = "";
 
 	async function loginHandler() {
-		if (password !== confirmPass) {
+		if (!keystore.pwd && password !== confirmPass) {
 			await browser.notifications.create("", {
 				type: "basic",
 				title: "QSOL Wallet Notification",
@@ -52,13 +52,16 @@
 	<img src="../assets/qubic.svg" alt="Qubic Logo" />
 	<div class="title-group">
 		<div style="font-size: 2rem; font-weight:700;">Qubic Wallet</div>
-		<h2>Create a Password to Continue</h2>
+		{#if !keystore.pwd}<h2>Create a Password to Continue</h2>
+		{:else}
+			<h2>Enter your Password to Login</h2>
+		{/if}
 	</div>
 
 	<div class="form-container">
 		<input
 			class="input-password"
-			placeholder="New Password"
+			placeholder={keystore.pwd ? "Password" : "Create Password"}
 			id="login-input"
 			type="password"
 			bind:value={password}
@@ -132,6 +135,7 @@
 		align-items: center;
 		background-color: #1a1d26;
 		font-size: large;
+		height: 100%;
 	}
 
 	.form-container {
@@ -139,6 +143,7 @@
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
+		height: 100% !important;
 	}
 
 	.input-password {

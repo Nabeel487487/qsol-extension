@@ -193,6 +193,7 @@
 		min-height: 434px;
 		background-color: #1a1d26;
 		padding-bottom: 4rem;
+		overflow-y: scroll;
 	}
 
 	#overview {
